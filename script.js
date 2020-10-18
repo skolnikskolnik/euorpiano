@@ -30,22 +30,20 @@ $(document).ready(function () {
         //Displays current forecast
         currentWeatherDisplay();
 
-        //Look through cityArray and retrieve ids from it
-
+        //Looks through the array and assigns ids and elements
         for (var i = 0; i < cityArray.length; i++) {
             var cityId = cityArray[i];
             var cityEl = document.getElementById(cityId);
         }
 
+        //Now using these variables add an event listener to make buttons work
         cityEl.addEventListener("click", function () {
             cityName = cityId;
 
             fiveDayForecast();
-
             currentWeatherDisplay();
         })
-
-    });
+    })
 
     function fiveDayForecast() {
         $.ajax({
@@ -222,27 +220,34 @@ $(document).ready(function () {
         //Need to get cities from local storage and use the addToCard fxn to display them
         var citiesToDisplay = localStorage.getItem("cities");
         citiesToDisplay = JSON.parse(citiesToDisplay);
-        for (var i = 0; i < citiesToDisplay.length; i++) {
-            addToCard(citiesToDisplay[i]);
+
+        if (!citiesToDisplay) {
+            console.log("test");
         }
+        else {
 
-        //This displays the cities, but when these items are clicked they don't display data
-        var cityEl = $(".clickCity");
-        cityEl.on("click", function () {
-            //We need to get the city name from the object clicked
-            cityName = $(this).attr("id");
+            for (var i = 0; i < citiesToDisplay.length; i++) {
+                addToCard(citiesToDisplay[i]);
+            }
 
-            queryURLfuture = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey1;
+            //This displays the cities, but when these items are clicked they don't display data
+            var cityEl = $(".clickCity");
+            cityEl.on("click", function () {
+                //We need to get the city name from the object clicked
+                cityName = $(this).attr("id");
 
-            queryURLpresent = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey2;
+                queryURLfuture = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey1;
 
-            //Displays the five day forecast
-            fiveDayForecast();
+                queryURLpresent = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey2;
 
-            //Displays current forecast
-            currentWeatherDisplay();
+                //Displays the five day forecast
+                fiveDayForecast();
 
-        })
+                //Displays current forecast
+                currentWeatherDisplay();
+
+            })
+        }
 
     }
 });

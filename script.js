@@ -20,7 +20,7 @@ $(document).ready(function () {
 
         //Adds the city name card to the page and adds it to the array of cities
         addToCard(cityName);
-        
+
         //Want to push cityArray to local storage
         localStorage.setItem("cities", JSON.stringify(cityArray));
 
@@ -218,12 +218,31 @@ $(document).ready(function () {
     function startPage() {
         var foreCastCards = $(".span1");
         foreCastCards.addClass("invisible");
-    
+
         //Need to get cities from local storage and use the addToCard fxn to display them
         var citiesToDisplay = localStorage.getItem("cities");
         citiesToDisplay = JSON.parse(citiesToDisplay);
-        for(var i = 0; i<citiesToDisplay.length; i++){
+        for (var i = 0; i < citiesToDisplay.length; i++) {
             addToCard(citiesToDisplay[i]);
         }
+
+        //This displays the cities, but when these items are clicked they don't display data
+        var cityEl = $(".clickCity");
+        cityEl.on("click", function () {
+            //We need to get the city name from the object clicked
+            cityName = $(this).attr("id");
+
+            queryURLfuture = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey1;
+
+            queryURLpresent = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey2;
+
+            //Displays the five day forecast
+            fiveDayForecast();
+
+            //Displays current forecast
+            currentWeatherDisplay();
+
+        })
+
     }
 });

@@ -16,3 +16,31 @@ h3{
     display:inline-block; 
 }
 
+.uvIndex{
+    display:inline-block;
+}
+
+.uvIndexSpan{
+    color: white;
+    padding: 3px;
+    border: 1px solid lightgray;
+}
+.green{
+    background-color: #66ff66;
+}
+.yellow{
+    background-color: #e6b800;
+}
+
+.orange{
+    background-color: #ff6600;
+}
+
+.red{
+    background-color: #ff3300;
+}
+
+.darkred{
+    background-color: #660033;
+}
+

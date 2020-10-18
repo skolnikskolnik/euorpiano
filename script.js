@@ -2,20 +2,48 @@ $(document).ready(function () {
     // This is our API key. Add your own API key between the ""
     var APIKey1 = "1b926fe361dd9ac5d241ebf0aa6a6ffb";
     var APIKey2 = "195500ce3388180192ee4c07e1d7b6b2";
+    var queryURLfuture = "";
+    var queryURLpresent = "";
+    var cityName = "";
+    var cityArray = [];
 
     startPage();
 
     $("#submit").on("click", function () {
         $("#currentCity").empty();
 
-        var cityName = ($("#searchInput").val()).trim();
+        cityName = ($("#searchInput").val()).trim();
 
-        var queryURLfuture = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey1;
+        queryURLfuture = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey1;
 
-        var queryURLpresent = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey2;
+        queryURLpresent = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey2;
 
         addToCard(cityName);
         //This ajax call gets forecast data
+
+        //Displays the five day forecast
+        fiveDayForecast();
+
+        currentWeatherDisplay();
+
+        //Look through cityArray and retrieve ids from it
+
+        for(var i = 0; i<cityArray.length ; i++){
+            var cityId = cityArray[i];
+            var cityEl = document.getElementById(cityId);
+        }
+
+        cityEl.addEventListener("click", function(){
+            cityName = cityId;
+
+            fiveDayForecast();
+
+            currentWeatherDisplay();
+        })
+
+    });
+
+    function fiveDayForecast() {
         $.ajax({
             url: queryURLfuture,
             method: "GET"
@@ -52,9 +80,9 @@ $(document).ready(function () {
 
                 //To display temp
                 var temp = futureWeather[indexOf].main.temp;
-                temp = (temp-273.15).toFixed(1);
+                temp = (temp - 273.15).toFixed(1);
                 var newEl = $("<div>");
-                newEl.text("Temp: " + temp +"° C");
+                newEl.text("Temp: " + temp + "° C");
                 targetEl.append(newEl);
 
                 //To display humidity
@@ -62,15 +90,17 @@ $(document).ready(function () {
                 var newEl2 = $("<div>");
                 newEl2.text(humidPercent + " % humidity");
                 targetEl.append(newEl2);
-                
+
             }
         });
+    }
 
-        //This ajax call gets current data
+    function currentWeatherDisplay() {
         $.ajax({
             url: queryURLpresent,
             method: "GET"
         }).then(function (response2) {
+            $("#currentCity").empty();
             //Displaying city name and today's date
             //Getting today's date
             var date = new Date();
@@ -167,19 +197,21 @@ $(document).ready(function () {
                 }
             });
         });
-
-
-    });
+    }
 
     function addToCard(cityName) {
         //We need to add list elements with class list-group-item to id="cityDisplay"
-        var newListEl = $("<li>");
-        newListEl.addClass("list-group-item clickCity");
-        newListEl.text(cityName);
+        var newListEl = $("<button>");
+        var newSpan = $("<span>")
+        newListEl.addClass("clickCity");
+        newListEl.attr("id", cityName);
+        newSpan.text(cityName);
+        newListEl.append(newSpan);
         $("#cityDisplay").append(newListEl);
+        cityArray.push(cityName);
     }
 
-    function startPage(){
+    function startPage() {
         var foreCastCards = $(".span1");
         foreCastCards.addClass("invisible");
 

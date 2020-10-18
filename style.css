@@ -65,4 +65,10 @@ h3{
     padding: 5px;
 }
 
+.invisible{
+    display: none;
+}
 
+span{
+    pointer-events: none;
+}

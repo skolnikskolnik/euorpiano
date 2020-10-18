@@ -3,6 +3,7 @@ $(document).ready(function () {
     var APIKey1 = "1b926fe361dd9ac5d241ebf0aa6a6ffb";
     var APIKey2 = "195500ce3388180192ee4c07e1d7b6b2";
 
+    startPage();
 
     $("#submit").on("click", function () {
         $("#currentCity").empty();
@@ -20,8 +21,49 @@ $(document).ready(function () {
             method: "GET"
         }).then(function (response) {
             var futureWeather = response.list;
-            console.log(futureWeather);
-            //need to make five in line cards
+            //Day 1 (using fourth one since that is 3pm)
+            var day1El = $("#day1");
+            var day2El = $("#day2");
+            var day3El = $("#day3");
+            var day4El = $("#day4");
+            var day5El = $("#day5");
+            displayElements(day1El, 4);
+            displayElements(day2El, 12);
+            displayElements(day3El, 20);
+            displayElements(day4El, 28);
+            displayElements(day5El, 36);
+
+            function displayElements(targetEl, indexOf) {
+                targetEl.removeClass("invisible");
+                //To get the date to display
+                var weatherString = futureWeather[indexOf].dt_txt;
+                weatherString = weatherString.substring(0, 10);
+                targetEl.text(weatherString);
+                var lineBreak = $("<br>");
+                targetEl.append(lineBreak);
+
+                //Displaying the icon
+                var forecastIcon = futureWeather[indexOf].weather[0].icon;
+                var iconLink = "http://openweathermap.org/img/w/" + forecastIcon + ".png";
+                var iconDisplay2 = $("<img>");
+                iconDisplay2.attr("src", iconLink);
+                iconDisplay2.addClass("forecast_icon");
+                targetEl.append(iconDisplay2, lineBreak);
+
+                //To display temp
+                var temp = futureWeather[indexOf].main.temp;
+                temp = (temp-273.15).toFixed(1);
+                var newEl = $("<div>");
+                newEl.text("Temp: " + temp +"° C");
+                targetEl.append(newEl);
+
+                //To display humidity
+                var humidPercent = futureWeather[indexOf].main.humidity;
+                var newEl2 = $("<div>");
+                newEl2.text(humidPercent + " % humidity");
+                targetEl.append(newEl2);
+                
+            }
         });
 
         //This ajax call gets current data
@@ -97,7 +139,7 @@ $(document).ready(function () {
             $.ajax({
                 url: queryURLuv,
                 method: "GET"
-            }).then(function(response3){
+            }).then(function (response3) {
                 var uvIndex = response3.value;
                 var uvIndexEl = $("<div>");
                 var uvIndexSpan = $("<div>")
@@ -108,20 +150,19 @@ $(document).ready(function () {
                 $("#currentCity").append(uvIndexEl, uvIndexSpan);
 
                 //Adding color coding for the different values of the uv Idex
-                console.log(uvIndex);
-                if(uvIndex <= 2){
+                if (uvIndex <= 2) {
                     uvIndexSpan.addClass("green");
                 }
-                else if(uvIndex >2 && uvIndex <=5){
+                else if (uvIndex > 2 && uvIndex <= 5) {
                     uvIndexSpan.addClass("yellow");
                 }
-                else if(uvIndex > 5 && uvIndex <= 8){
+                else if (uvIndex > 5 && uvIndex <= 8) {
                     uvIndexSpan.addClass("orange");
                 }
-                else if(uvIndex >8 && uvIndex <=11){
+                else if (uvIndex > 8 && uvIndex <= 11) {
                     uvIndexSpan.addClass("red");
                 }
-                else{
+                else {
                     uvIndexSpan.addClass("darkred");
                 }
             });
@@ -130,12 +171,17 @@ $(document).ready(function () {
 
     });
 
-
     function addToCard(cityName) {
         //We need to add list elements with class list-group-item to id="cityDisplay"
         var newListEl = $("<li>");
-        newListEl.addClass("list-group-item");
+        newListEl.addClass("list-group-item clickCity");
         newListEl.text(cityName);
         $("#cityDisplay").append(newListEl);
+    }
+
+    function startPage(){
+        var foreCastCards = $(".span1");
+        foreCastCards.addClass("invisible");
+
     }
 });

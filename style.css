@@ -68,7 +68,3 @@ h3{
 .invisible{
     display: none;
 }
-
-span{
-    pointer-events: none;
-}

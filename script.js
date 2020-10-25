@@ -108,7 +108,6 @@ $(document).ready(function () {
             var date = new Date();
             var dateOfMonth = date.getDate();
             var month = date.getMonth() + 1;
-            var dayOfWeek = date.getDay();
             var year = date.getFullYear();
             var dateToDisplay = month + "/" + dateOfMonth + "/" + year;
 
@@ -135,6 +134,7 @@ $(document).ready(function () {
             var windSpeed = response2.wind.speed;
             var windDegree = JSON.parse(response2.wind.deg);
             var windDirection = "";
+            //I realized after I did this I didn't need to include this, but I spent time on it so it stays
             if ((windDegree >= 337.5 && windDegree < 360) || (windDegree >= 0 && windDegree < 22.5)) {
                 windDirection = "N";
             }

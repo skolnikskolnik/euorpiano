@@ -14,9 +14,9 @@ $(document).ready(function () {
 
         cityName = ($("#searchInput").val()).trim();
 
-        queryURLfuture = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey1;
+        queryURLfuture = "https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey1;
 
-        queryURLpresent = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey2;
+        queryURLpresent = "https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey2;
 
         //Adds the city name card to the page and adds it to the array of cities
         addToCard(cityName);
@@ -46,6 +46,8 @@ $(document).ready(function () {
     })
 
     function fiveDayForecast() {
+        queryURLfuture = "https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey1;
+        
         $.ajax({
             url: queryURLfuture,
             method: "GET"
@@ -98,6 +100,7 @@ $(document).ready(function () {
     }
 
     function currentWeatherDisplay() {
+        queryURLpresent = "https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey2;
         $.ajax({
             url: queryURLpresent,
             method: "GET"
@@ -114,7 +117,7 @@ $(document).ready(function () {
             //Getting city name 
             //Getting icon to display next to city name 
             var iconNumber = response2.weather[0].icon;
-            var iconLink = "http://openweathermap.org/img/w/" + iconNumber + ".png";
+            var iconLink = "https://cors-anywhere.herokuapp.com/http://openweathermap.org/img/w/" + iconNumber + ".png";
             var iconDisplay = $("<img>");
             iconDisplay.attr("src", iconLink);
             var displayHeader = $("<h3>");
@@ -167,7 +170,7 @@ $(document).ready(function () {
             //UV index
             var lat = response2.coord.lat;
             var lon = response2.coord.lon;
-            var queryURLuv = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + APIKey1;
+            var queryURLuv = "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + APIKey1;
             $.ajax({
                 url: queryURLuv,
                 method: "GET"
@@ -222,7 +225,8 @@ $(document).ready(function () {
         citiesToDisplay = JSON.parse(citiesToDisplay);
 
         if (!citiesToDisplay) {
-            console.log("test");
+            //If no city is in local storage, display Philadelphia
+            cityName = "Philadelphia";
         }
         else {
 
@@ -230,15 +234,17 @@ $(document).ready(function () {
                 addToCard(citiesToDisplay[i]);
             }
 
-            //This displays the cities, but when these items are clicked they don't display data
+            cityName = citiesToDisplay[citiesToDisplay.length - 1];
+
+            //This displays the cities in the cards
             var cityEl = $(".clickCity");
             cityEl.on("click", function () {
                 //We need to get the city name from the object clicked
                 cityName = $(this).attr("id");
 
-                queryURLfuture = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey1;
+                queryURLfuture = "https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey1;
 
-                queryURLpresent = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey2;
+                queryURLpresent = "https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey2;
 
                 //Displays the five day forecast
                 fiveDayForecast();
@@ -246,8 +252,19 @@ $(document).ready(function () {
                 //Displays current forecast
                 currentWeatherDisplay();
 
-            })
-        }
+            });
+            
+        }//Closes the else
 
-    }
+        console.log(cityName);
+
+        //We want the page to autopopulate with the current weather of the last city
+        currentWeatherDisplay();
+
+        //We also want the five day forecast of the last city
+
+        fiveDayForecast(cityName);
+    }//Closes start page fxn declaration
+
+
 });

@@ -117,7 +117,7 @@ $(document).ready(function () {
             //Getting city name 
             //Getting icon to display next to city name 
             var iconNumber = response2.weather[0].icon;
-            var iconLink = "https://cors-anywhere.herokuapp.com/http://openweathermap.org/img/w/" + iconNumber + ".png";
+            var iconLink = "http://openweathermap.org/img/w/" + iconNumber + ".png";
             var iconDisplay = $("<img>");
             iconDisplay.attr("src", iconLink);
             var displayHeader = $("<h3>");
@@ -255,8 +255,6 @@ $(document).ready(function () {
             });
             
         }//Closes the else
-
-        console.log(cityName);
 
         //We want the page to autopopulate with the current weather of the last city
         currentWeatherDisplay();
